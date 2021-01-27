@@ -49,9 +49,14 @@ if (isset($_POST['alta'])) {
 	}
 }
 
-//CONSULTA DE LIBROS
+//BAJA TODOS LOS LIBROS
+if (isset($_POST['baja'])) {
+	$array_libros = [];
+}
 
-foreach ($array_libros as $key => $value){
+
+//CONSULTA DE LIBROS
+foreach ($array_libros as $key => $value) {
 	$table_libros .= "<tr>";
 	$table_libros .= "<td>$key</td>";
 	$table_libros .= "<td>$value[titulo]</td>";
@@ -120,17 +125,22 @@ $_SESSION['libros'] = $array_libros;
 			</table>
 		</form><br>
 		<div>
-			<table><?=$table_libros?></table>
+			<table><?= $table_libros ?></table>
 		</div>
 	</div>
-	<form name=" formulario" id="formulario" method="post" action="#">
+	<form name="formulario" id="formulario" method="post" action="#">
 		<!--estos input hidden sirven para guardar la id del libro a modificar-->
 		<input type="hidden" name="id" id="id">
 		<input type="hidden" name="titulo" id="titulo">
 		<input type="hidden" name="precio" id="precio">
 		<input type="hidden" name="modificacion">
 	</form>
+	<form action="#" method="post" id="form_baja">
+		<input type="hidden" name="baja">
+		<input type="button" id="button_baja" value="Borrar todos los libros">
+	</form>
 </body>
+<script src="js/button_baja.js"></script>
 
 <?= ("<pre>" . print_r($array_libros, true) . "</pre>") ?>;
 
