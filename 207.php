@@ -20,7 +20,7 @@ if (isset($_POST['alta'])) {
 	$isbn = trim($_POST['isbn']);
 
 	try {
-		
+
 		//VALIDAR DATOS
 		if (empty($titulo)) {
 			throw new Exception("El titulo es obligatorio", 10);
@@ -31,6 +31,9 @@ if (isset($_POST['alta'])) {
 		if (empty($isbn)) {
 			throw new Exception("El ISBN numero es obligatorio", 12);
 		}
+		if (array_key_exists($isbn, $array_libros)) {
+			throw new Exception("El ISBN ya existe en base de datos", 13);
+		}
 
 		//GUARDAR DATOS EN EL ARRAY LIBROS
 		$array_libros[$isbn]['titulo'] = $titulo;
@@ -38,6 +41,9 @@ if (isset($_POST['alta'])) {
 
 		//MENSAJE: SUCCESS
 		$mensaje = 'Alta efectuada';
+
+		//LIMPIAR EL FORMULARIO
+		$precio = $titulo = $isbn = null;
 
 	} catch (Exception $e) {
 		$mensaje = $e->getMessage() . ' ' . $e->getCode();
@@ -47,7 +53,6 @@ if (isset($_POST['alta'])) {
 //guardar los datos en el session_abort
 $_SESSION['libros'] = $array_libros;
 
-echo ("<pre>" . print_r($array_libros, true) . "</pre>");
 
 ?>
 <!DOCTYPE html>
@@ -115,5 +120,8 @@ echo ("<pre>" . print_r($array_libros, true) . "</pre>");
 		<input type="hidden" name="modificacion">
 	</form>
 </body>
+
+<?= ("<pre>" . print_r($array_libros, true) . "</pre>")?>;
+
 
 </html>
