@@ -54,6 +54,20 @@ if (isset($_POST['baja'])) {
 	$array_libros = [];
 }
 
+//BAJA SOLO UN LIBRO
+if (isset($_POST['baja_libro'])) {
+	$isbn_baja = $_POST['isbn'];
+	try {
+		//VALIDAR DATOS
+		if (empty($isbn_baja)) {
+			throw new Exception("El ISBN es obligatorio", 15);
+		}
+		unset($array_libros[$isbn_baja]);
+	} catch (Exception $e) {
+		$mensaje = $e->getMessage() . ' ' . $e->getCode();
+	}
+	$mensaje = 'Baja efectuada';
+}
 
 //CONSULTA DE LIBROS
 foreach ($array_libros as $key => $value) {
@@ -61,7 +75,12 @@ foreach ($array_libros as $key => $value) {
 	$table_libros .= "<td>$key</td>";
 	$table_libros .= "<td>$value[titulo]</td>";
 	$table_libros .= "<td>$value[precio]</td>";
-	$table_libros .= "<td></td>";
+	$table_libros .= "<td>";
+	$table_libros .= "<form method='post' action='#'>";
+	$table_libros .= "<input type='hidden' name='isbn' value='$key'>";
+	$table_libros .= "<input type='submit' name='baja_libro' value='Baja'>";
+	$table_libros .= "<td>";
+	$table_libros .= "</td>";
 	$table_libros .= "<tr>";
 }
 
