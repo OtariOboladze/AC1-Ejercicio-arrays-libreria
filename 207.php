@@ -44,11 +44,22 @@ if (isset($_POST['alta'])) {
 
 		//LIMPIAR EL FORMULARIO
 		$precio = $titulo = $isbn = null;
-
 	} catch (Exception $e) {
 		$mensaje = $e->getMessage() . ' ' . $e->getCode();
 	}
 }
+
+//CONSULTA DE LIBROS
+
+foreach ($array_libros as $key => $value){
+	$table_libros .= "<tr>";
+	$table_libros .= "<td>$key</td>";
+	$table_libros .= "<td>$value[titulo]</td>";
+	$table_libros .= "<td>$value[precio]</td>";
+	$table_libros .= "<td></td>";
+	$table_libros .= "<tr>";
+}
+
 
 //guardar los datos en el session_abort
 $_SESSION['libros'] = $array_libros;
@@ -109,7 +120,7 @@ $_SESSION['libros'] = $array_libros;
 			</table>
 		</form><br>
 		<div>
-			<table></table>
+			<table><?=$table_libros?></table>
 		</div>
 	</div>
 	<form name=" formulario" id="formulario" method="post" action="#">
@@ -121,7 +132,7 @@ $_SESSION['libros'] = $array_libros;
 	</form>
 </body>
 
-<?= ("<pre>" . print_r($array_libros, true) . "</pre>")?>;
+<?= ("<pre>" . print_r($array_libros, true) . "</pre>") ?>;
 
 
 </html>
