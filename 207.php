@@ -69,17 +69,57 @@ if (isset($_POST['baja_libro'])) {
 	$mensaje = 'Baja efectuada';
 }
 
+//MODIFICACION LOS LIBROS
+
+if (isset($_POST['modificacion'])) {
+	//RECUPERAR DATOS
+	$titulo = trim($_POST['titulo_mod']);
+	$precio = trim($_POST['precio_mod']);
+	$isbn = trim($_POST['isbn_mod']);
+
+	try {
+		//VALIDAR DATOS
+		if (empty($titulo)) {
+			throw new Exception("El titulo es obligatorio", 10);
+		}
+		if (empty($precio)) {
+			throw new Exception("El precio es obligatorio", 11);
+		}
+		if (empty($isbn)) {
+			throw new Exception("El ISBN numero es obligatorio", 12);
+		}
+		if (!array_key_exists($isbn, $array_libros)) {
+			throw new Exception("El ISBN no existe en base de datos", 14);
+		}
+
+		//MODIFICAR DATOS EN EL ARRAY LIBROS
+		$array_libros[$isbn]['titulo'] = $titulo;
+		$array_libros[$isbn]['precio'] = $precio;
+
+		//MENSAJE: SUCCESS
+		$mensaje = 'Modificacion efectuada';
+
+		//LIMPIAR EL FORMULARIO
+		$precio = $titulo = $isbn = null;
+	} catch (Exception $e) {
+		$mensaje = $e->getMessage() . ' ' . $e->getCode();
+	}
+}
+
+
+
 //CONSULTA DE LIBROS
 foreach ($array_libros as $key => $value) {
 	$table_libros .= "<tr>";
-	$table_libros .= "<td>$key</td>";
-	$table_libros .= "<td>$value[titulo]</td>";
-	$table_libros .= "<td>$value[precio]</td>";
+	$table_libros .= "<td class='isbn'>$key</td>";
+	$table_libros .= "<td contenteditable class='titulo' style='border: solid black 3px'>$value[titulo]</td>";
+	$table_libros .= "<td contenteditable class='precio' style='border: solid black 3px'>$value[precio]</td>";
 	$table_libros .= "<td>";
 	$table_libros .= "<form method='post' action='#'>";
 	$table_libros .= "<input type='hidden' name='isbn' value='$key'>";
 	$table_libros .= "<input type='submit' name='baja_libro' value='Baja'>";
-	$table_libros .= "<td>";
+	$table_libros .= "</form>";
+	$table_libros .= "<input type='button' value='Modificar' class='modificar'>";
 	$table_libros .= "</td>";
 	$table_libros .= "<tr>";
 }
@@ -136,7 +176,7 @@ $_SESSION['libros'] = $array_libros;
 					<th colspan='2' style='width:150px'>Opción</th>
 				</tr>
 				<tr>
-					<td><input type='number' size='50' maxlenght='100' name='isbn' value="<?= $isbn ?>"></td>
+					<td><input type='text' size='50' maxlenght='100' name='isbn' value="<?= $isbn ?>"></td>
 					<td><input type='text' size='50' maxlenght='100' name='titulo' value="<?= $titulo ?>"></td>
 					<td><input type='number' maxlenght='5' name='precio' step='0.1' value="<?= $precio ?>"></td>
 					<td colspan='2'><input type='submit' name='alta' value='Agregar' /></td>
@@ -147,11 +187,11 @@ $_SESSION['libros'] = $array_libros;
 			<table><?= $table_libros ?></table>
 		</div>
 	</div>
-	<form name="formulario" id="formulario" method="post" action="#">
+	<form name="formulario" id="formulario_mod" method="post" action="#">
 		<!--estos input hidden sirven para guardar la id del libro a modificar-->
-		<input type="hidden" name="id" id="id">
-		<input type="hidden" name="titulo" id="titulo">
-		<input type="hidden" name="precio" id="precio">
+		<input type="hidden" name="isbn_mod">
+		<input type="hidden" name="titulo_mod">
+		<input type="hidden" name="precio_mod">
 		<input type="hidden" name="modificacion">
 	</form>
 	<form action="#" method="post" id="form_baja">
@@ -159,9 +199,7 @@ $_SESSION['libros'] = $array_libros;
 		<input type="button" id="button_baja" value="Borrar todos los libros">
 	</form>
 </body>
-<script src="js/button_baja.js"></script>
-
-<?= ("<pre>" . print_r($array_libros, true) . "</pre>") ?>;
+<script src="js/index.js"></script>
 
 
 </html>

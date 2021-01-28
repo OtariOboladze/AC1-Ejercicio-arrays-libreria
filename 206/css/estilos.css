@@ -1,6 +1,0 @@
-label {width: 150px; display: inline-block;}
-table {border: 1px solid blue;}
-td, th {border: 1px solid blue; width: 250px;}
-.wraper {margin: auto; border: 3px ridge blue;width: 650px;padding: 15px;}
-form {margin: 0px; display: inline-block;}
-.nombre, .direccion {cursor: pointer; border: 2px solid black;}
